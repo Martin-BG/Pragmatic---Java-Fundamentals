@@ -14,8 +14,8 @@ public class Demo {
 
 			studentsDemo();
 
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		}
 	}
 
