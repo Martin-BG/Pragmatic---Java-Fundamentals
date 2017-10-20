@@ -1,13 +1,13 @@
 package edu.homework08.exceptions.custom;
 
 public class Student {
-	static enum sexType {
+	static enum SexType {
 		MALE, FEMALE
 	};
 
 	private String name;
 	private String family;
-	private sexType sex;
+	private SexType sex;
 	private int age;
 
 	/**
@@ -32,7 +32,7 @@ public class Student {
 	/**
 	 * @return the sex
 	 */
-	public sexType getSex() {
+	public SexType getSex() {
 		return sex;
 	}
 
@@ -44,14 +44,14 @@ public class Student {
 	public void setSex(String sex) throws InvalidStudentDataException {
 		if (sex != null) {
 			if ("male".equalsIgnoreCase(sex)) {
-				this.sex = sexType.MALE;
+				this.sex = SexType.MALE;
 				return;
 			} else if ("female".equalsIgnoreCase(sex)) {
-				this.sex = sexType.FEMALE;
+				this.sex = SexType.FEMALE;
 				return;
 			}
 		}
-		throw new InvalidStudentDataException(" (sex type): " + sex);
+		throw new InvalidStudentDataException("Invalid sex type: " + sex);
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class Student {
 		if (age >= 7 && age <= 18) {
 			this.age = age;
 		} else {
-			throw new InvalidStudentDataException(" (age): " + age);
+			throw new InvalidStudentDataException("Invalid age: " + age);
 		}
 	}
 
@@ -90,7 +90,7 @@ public class Student {
 		if (name != null && name.length() <= 12 && name.length() > 0) {
 			this.name = name;
 		} else {
-			throw new InvalidStudentDataException(" (name): " + name);
+			throw new InvalidStudentDataException("Invalid name: " + name);
 		}
 	}
 
@@ -110,7 +110,7 @@ public class Student {
 		if (family != null && family.length() <= 20 && family.length() > 0) {
 			this.family = family;
 		} else {
-			throw new InvalidStudentDataException(" (family): " + family);
+			throw new InvalidStudentDataException("Invalid family name: " + family);
 		}
 	}
 

@@ -27,70 +27,80 @@ public class Demo {
 			s1 = new Student("John", "Dow", "male", 18);
 			System.out.println(s1);
 		} catch (InvalidStudentDataException e) {
-
+			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 
 		try {
 			s1 = new Student("Ana", "Sinona", "female", 7);
 			System.out.println(s1);
 		} catch (InvalidStudentDataException e) {
-
+			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 
 		try {
 			s1 = new Student(null, "Dow", "male", 18);
 			System.out.println(s1);
 		} catch (InvalidStudentDataException e) {
-
+			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 
 		try {
 			s1 = new Student("John", null, "male", 18);
 			System.out.println(s1);
 		} catch (InvalidStudentDataException e) {
-
+			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 
 		try {
 			s1 = new Student("John", "Dow", null, 18);
 			System.out.println(s1);
 		} catch (InvalidStudentDataException e) {
-
+			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 
 		try {
 			s1 = new Student("VeryLongFirstName", "Dow", "male", 18);
 			System.out.println(s1);
 		} catch (InvalidStudentDataException e) {
-
+			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 
 		try {
 			s1 = new Student("John", "VeryVeryLongFamilyName", "male", 18);
 			System.out.println(s1);
 		} catch (InvalidStudentDataException e) {
-
+			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 
 		try {
 			s1 = new Student("John", "Dow", "invalid sex type", 18);
 			System.out.println(s1);
 		} catch (InvalidStudentDataException e) {
-
+			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 
 		try {
 			s1 = new Student("John", "Dow", "male", 19);
 			System.out.println(s1);
 		} catch (InvalidStudentDataException e) {
-
+			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 
 		try {
 			s1 = new Student("John", "Dow", "male", 6);
 			System.out.println(s1);
 		} catch (InvalidStudentDataException e) {
-
+			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 

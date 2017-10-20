@@ -1,13 +1,13 @@
 package edu.homework08.exceptions.java;
 
 public class Student {
-	static enum sexType {
+	static enum SexType {
 		MALE, FEMALE
 	};
 
 	private String name;
 	private String family;
-	private sexType sex;
+	private SexType sex;
 	private int age;
 
 	/**
@@ -24,10 +24,14 @@ public class Student {
 		setAge(age);
 	}
 
+	public Student() {
+		super();
+	}
+
 	/**
 	 * @return the sex
 	 */
-	public sexType getSex() {
+	public SexType getSex() {
 		return sex;
 	}
 
@@ -38,10 +42,10 @@ public class Student {
 	public void setSex(String sex) {
 		if (sex != null) {
 			if ("male".equalsIgnoreCase(sex)) {
-				this.sex = sexType.MALE;
+				this.sex = SexType.MALE;
 				return;
 			} else if ("female".equalsIgnoreCase(sex)) {
-				this.sex = sexType.FEMALE;
+				this.sex = SexType.FEMALE;
 				return;
 			}
 		}
@@ -101,7 +105,7 @@ public class Student {
 		if (family != null && family.length() <= 20 && family.length() > 0) {
 			this.family = family;
 		} else {
-			throw new IllegalArgumentException("Invalid family: " + family);
+			throw new IllegalArgumentException("Invalid family name: " + family);
 		}
 	}
 
