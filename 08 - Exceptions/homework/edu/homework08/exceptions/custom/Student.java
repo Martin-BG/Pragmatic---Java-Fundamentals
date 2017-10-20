@@ -1,10 +1,9 @@
-package edu.homework08.exceptions;
+package edu.homework08.exceptions.custom;
 
 public class Student {
 	static enum sexType {
 		MALE, FEMALE
 	};
-
 
 	private String name;
 	private String family;
@@ -16,13 +15,18 @@ public class Student {
 	 * @param family
 	 * @param sex
 	 * @param age
+	 * @throws InvalidStudentDataException
 	 */
-	public Student(String name, String family, String sex, int age) {
+	public Student(String name, String family, String sex, int age) throws InvalidStudentDataException {
 		super();
 		setName(name);
 		setFamily(family);
 		setSex(sex);
 		setAge(age);
+	}
+
+	public Student() {
+		super();
 	}
 
 	/**
@@ -35,8 +39,9 @@ public class Student {
 	/**
 	 * @param sex
 	 *            the sex to set
+	 * @throws InvalidStudentDataException
 	 */
-	public void setSex(String sex) {
+	public void setSex(String sex) throws InvalidStudentDataException {
 		if (sex != null) {
 			if ("male".equalsIgnoreCase(sex)) {
 				this.sex = sexType.MALE;
@@ -45,9 +50,8 @@ public class Student {
 				this.sex = sexType.FEMALE;
 				return;
 			}
-		} else {
-			throw new IllegalArgumentException("Invalid sex type: " + sex);
 		}
+		throw new InvalidStudentDataException(" (sex type): " + sex);
 	}
 
 	/**
@@ -60,12 +64,13 @@ public class Student {
 	/**
 	 * @param age
 	 *            the age to set
+	 * @throws InvalidStudentDataException
 	 */
-	public void setAge(int age) {
+	public void setAge(int age) throws InvalidStudentDataException {
 		if (age >= 7 && age <= 18) {
 			this.age = age;
 		} else {
-			throw new IllegalArgumentException("Invalid age: " + age);
+			throw new InvalidStudentDataException(" (age): " + age);
 		}
 	}
 
@@ -79,12 +84,13 @@ public class Student {
 	/**
 	 * @param name
 	 *            the name to set
+	 * @throws InvalidStudentDataException
 	 */
-	public void setName(String name) {
+	public void setName(String name) throws InvalidStudentDataException {
 		if (name != null && name.length() <= 12 && name.length() > 0) {
 			this.name = name;
 		} else {
-			throw new IllegalArgumentException("Invalid name: " + name);
+			throw new InvalidStudentDataException(" (name): " + name);
 		}
 	}
 
@@ -98,18 +104,16 @@ public class Student {
 	/**
 	 * @param family
 	 *            the family to set
+	 * @throws InvalidStudentDataException
 	 */
-	public void setFamily(String family) {
+	public void setFamily(String family) throws InvalidStudentDataException {
 		if (family != null && family.length() <= 20 && family.length() > 0) {
 			this.family = family;
 		} else {
-			throw new IllegalArgumentException("Invalid family: " + family);
+			throw new InvalidStudentDataException(" (family): " + family);
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return String.format("Student [name=%s, family=%s, sex=%s, age=%s]", name, family, sex, age);
