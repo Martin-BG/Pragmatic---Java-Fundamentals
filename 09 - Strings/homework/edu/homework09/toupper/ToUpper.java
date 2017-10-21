@@ -24,7 +24,7 @@ public class ToUpper {
 		long timer = System.nanoTime();
 		for (int i = 0; i < repeats; i++) {
 			newText = text;
-			matcher = pattern.matcher(text);
+			matcher = pattern.matcher(newText);
 			while (matcher.find()) {
 				newText = newText.replaceFirst(matcher.group("group"), matcher.group("text").toUpperCase());
 			}
