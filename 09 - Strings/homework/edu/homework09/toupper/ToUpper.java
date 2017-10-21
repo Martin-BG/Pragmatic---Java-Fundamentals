@@ -63,6 +63,22 @@ public class ToUpper {
 		timer = System.nanoTime() - timer;
 		System.out.println("[Matcher] Elapsed time in milliseconds: " + timer / 1000000);
 		System.out.println(newText);
+		System.out.println();
+		
+		// Using Matcher + StringBuffer
+		StringBuffer stringBuffer = new StringBuffer();
+		timer = System.nanoTime();
+		for (int i = 0; i < repeats; i++) {
+			stringBuffer = new StringBuffer();
+			matcher = pattern.matcher(text);
+			while (matcher.find()) {
+				matcher.appendReplacement(stringBuffer, matcher.group("text").toUpperCase());
+			}
+			matcher.appendTail(stringBuffer);
+		}
+		timer = System.nanoTime() - timer;
+		System.out.println("[Matcher + StringBuffer] Elapsed time in milliseconds: " + timer / 1000000);
+		System.out.println(stringBuffer.toString());
 	}
 	
 }
