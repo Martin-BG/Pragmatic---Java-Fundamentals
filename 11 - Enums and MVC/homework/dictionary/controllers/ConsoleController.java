@@ -1,6 +1,6 @@
 package dictionary.controllers;
 
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.Scanner;
 import dictionary.model.*;
 
@@ -101,10 +101,10 @@ public class ConsoleController {
 
 	private void listAll() {
 		System.out.println("Dictionary contents (sorted alphabetically):");
-
-		Iterator<Entry> it = dictionary.getIterator();
-		while (it.hasNext()) {
-			System.out.println(getEntryDetails(it.next()));
+		
+		Collection<Entry> entries = dictionary.getEntries();
+		for(Entry entry : entries) {
+			System.out.println(getEntryDetails(entry));
 		}
 	}
 

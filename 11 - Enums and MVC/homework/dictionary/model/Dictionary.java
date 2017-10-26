@@ -24,7 +24,7 @@ public class Dictionary {
 		return entries.remove(word);
 	}
 
-	public Iterator<Entry> getIterator() {
-		return entries.values().iterator();
+	public Collection<Entry> getEntries() {
+		return Collections.unmodifiableCollection(entries.values());
 	}
 }
