@@ -1,26 +1,24 @@
 package dictionary.controllers;
 
+import java.util.Iterator;
 import java.util.Scanner;
-import edu.pragmatic.dictionary.model.*;
+import dictionary.model.*;
 
 public class ConsoleController {
 
 	private enum Choice {
-		ADD,
-		SEARCH,
-		EXIT,
-		INVALID
+		ADD, SEARCH, REMOVE, LIST, EXIT, INVALID
 	}
-	
+
 	private Scanner sc;
 	private Dictionary dictionary;
-	
+
 	public void start() {
 		sc = new Scanner(System.in);
 		dictionary = new Dictionary();
-		
+
 		boolean shouldContinue = true;
-		
+
 		do {
 			Choice c = showMenu();
 			switch (c) {
@@ -30,6 +28,12 @@ public class ConsoleController {
 			case SEARCH:
 				search();
 				break;
+			case REMOVE:
+				remove();
+				break;
+			case LIST:
+				listAll();
+				break;
 			case EXIT:
 				shouldContinue = false;
 				break;
@@ -37,54 +41,85 @@ public class ConsoleController {
 				System.out.println("Invalid option");
 				break;
 			}
-			
-		} while(shouldContinue);
+
+		} while (shouldContinue);
 	}
-	
+
 	private Choice showMenu() {
+		System.out.println();
 		System.out.println("---MENU---");
 		System.out.println("1. Add");
 		System.out.println("2. Search");
-		System.out.println("3. Exit");
-		System.out.println("Select option: ");
+		System.out.println("3. Remove");
+		System.out.println("4. List all words");
+		System.out.println("5. Exit");
+		System.out.print("Select option: ");
 		int c = sc.nextInt();
 		sc.nextLine();
-		
+		System.out.println();
+
 		switch (c) {
-		case 1: 	return Choice.ADD;
-		case 2: return Choice.SEARCH;
-		case 3: return Choice.EXIT;
-		default: return Choice.INVALID;
+		case 1:
+			return Choice.ADD;
+		case 2:
+			return Choice.SEARCH;
+		case 3:
+			return Choice.REMOVE;
+		case 4:
+			return Choice.LIST;
+		case 5:
+			return Choice.EXIT;
+		default:
+			return Choice.INVALID;
 		}
 	}
-	
+
 	private void addEntry() {
-		System.out.println("Enter word: ");
+		System.out.print("Enter word: ");
 		String word = sc.nextLine();
-		System.out.println("Enter translation: ");
+		System.out.print("Enter translation: ");
 		String translation = sc.nextLine();
-		
-		Entry e = new Entry(word, translation);
+		System.out.print("Enter transcription: ");
+		String transcription = sc.nextLine();
+		Entry e = new Entry(word, translation, transcription);
 		dictionary.add(e);
-		
+
 		System.out.println("Done");
 	}
-	
+
 	private void search() {
 		System.out.println("Enter word: ");
 		String word = sc.nextLine();
-		
+
 		Entry e = dictionary.search(word);
-		if(e != null) {
+		if (e != null) {
 			System.out.println("Translation is: " + e.getTranslation());
 		} else {
 			System.out.println("No such word exists");
 		}
 	}
-	
+
+	private void listAll() {
+		System.out.println("Dictionary contents (sorted alphabetically):");
+
+		Iterator<Entry> it = dictionary.getIterator();
+		while (it.hasNext()) {
+			System.out.println(getEntryDetails(it.next()));
+		}
+	}
+
+	private void remove() {
+		System.out.println("Enter word to remove: ");
+		String word = sc.nextLine();
+		Entry removed = dictionary.remove(word);
+		if (removed == null) {
+			System.out.println(word + " not found in dictionary!");
+		} else {
+			System.out.println("Removed successfully: " + getEntryDetails(removed));
+		}
+	}
+
+	private String getEntryDetails(Entry e) {
+		return (e.getWord() + " - " + e.getTranslation() + " [" + e.getTranscription() + "]");
+	}
 }
-
-
-
-
-
