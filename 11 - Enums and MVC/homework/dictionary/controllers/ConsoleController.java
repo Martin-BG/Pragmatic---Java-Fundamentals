@@ -35,6 +35,7 @@ public class ConsoleController {
 				listAll();
 				break;
 			case EXIT:
+				System.out.println("Good bye!");
 				shouldContinue = false;
 				break;
 			case INVALID:
@@ -88,12 +89,12 @@ public class ConsoleController {
 	}
 
 	private void search() {
-		System.out.println("Enter word: ");
+		System.out.print("Enter word: ");
 		String word = sc.nextLine();
 
 		Entry e = dictionary.search(word);
 		if (e != null) {
-			System.out.println("Translation is: " + e.getTranslation());
+			System.out.println("Translation is: " + e.getTranslation() + " [" + e.getTranscription() + "]");
 		} else {
 			System.out.println("No such word exists");
 		}
@@ -109,7 +110,7 @@ public class ConsoleController {
 	}
 
 	private void remove() {
-		System.out.println("Enter word to remove: ");
+		System.out.print("Enter word to remove: ");
 		String word = sc.nextLine();
 		Entry removed = dictionary.remove(word);
 		if (removed == null) {
