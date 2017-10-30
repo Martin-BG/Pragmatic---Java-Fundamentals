@@ -51,16 +51,24 @@ public class Registry<T> {
 		return false;
 	}
 
-	@SuppressWarnings({ "unchecked", "hiding" })
-	public <T> T[] getElements() {
+	/**
+	 * 
+	 * @return Returns null for empty container
+	 */
+	@SuppressWarnings({ "unchecked" })
+	public <G> G[] getElementsGen() {
 		if (this.currentElements > 0) {
-			T[] result = (T[]) Array.newInstance(this.elements.get(0).getClass(), this.currentElements);
+			G[] result = (G[]) Array.newInstance(this.elements.get(0).getClass(), this.currentElements);
 			result = this.elements.toArray(result);
-			return (T[]) result;
+			return (G[]) result;
 		}
 		return null;
 	}
 
+	public Object[] getElements() {
+		return this.elements.toArray();
+	}
+	
 	@Override
 	public String toString() {
 		return String.format("Registry [name=%s, maxElements=%s, currentElements=%s]", name, maxElements,

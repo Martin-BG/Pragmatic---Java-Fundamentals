@@ -7,7 +7,7 @@ public class Demo {
 			System.out.println("Registry<Integer>");
 			Registry<Integer> intReg = new Registry<>("Integer", 3);
 			System.out.println(intReg);
-			printRegistry(intReg.getElements()); // returns null on empty Register
+			printRegistry(intReg.getElements());
 
 			boolean added = true;
 			for (int i = 0; i < 5 && added; i++) {
@@ -18,7 +18,10 @@ public class Demo {
 				}
 			}
 
+			System.out.print("Object[]: ");
 			printRegistry(intReg.getElements());
+			System.out.print("<G> G[] : ");
+			printRegistry(intReg.getElementsGen());
 
 			intReg.remove(1);
 			System.out.println(intReg);
@@ -41,7 +44,10 @@ public class Demo {
 				}
 			}
 
+			System.out.print("Object[]: ");
 			printRegistry(strReg.getElements());
+			System.out.print("<G> G[] : ");
+			printRegistry(strReg.getElementsGen());
 
 		} catch (RegistryException e) {
 			System.out.println(e.getMessage());
