@@ -1,4 +1,4 @@
-package edu.pragmatic;
+package edu.pragmatic.calculator;
 
 public class DemoCalculator {
 

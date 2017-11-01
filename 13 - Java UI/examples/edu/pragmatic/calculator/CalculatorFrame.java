@@ -1,4 +1,4 @@
-package edu.pragmatic;
+package edu.pragmatic.calculator;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
