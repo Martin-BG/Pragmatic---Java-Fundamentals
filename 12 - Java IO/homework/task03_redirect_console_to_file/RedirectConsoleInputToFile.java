@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 
 import javax.swing.filechooser.FileSystemView;
 
@@ -14,16 +15,14 @@ public class RedirectConsoleInputToFile {
 
 	public static void main(String[] args) {
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-				BufferedWriter output = new BufferedWriter(new FileWriter(OUTPUT_FILE))) {
-
+				PrintWriter output = new PrintWriter(new BufferedWriter(new FileWriter(OUTPUT_FILE)))) {
 			int counter = 0;
 			System.out.println("Enter text (Ctrl-Z to terminate)");
 
 			String line;
 			while ((line = reader.readLine()) != null) {
-				output.write(line);
-				output.write(System.lineSeparator());
-				output.flush();
+				output.println(line);
+				//output.flush();
 				counter++;
 			}
 
