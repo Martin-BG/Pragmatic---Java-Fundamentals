@@ -1,5 +1,7 @@
 package task05_serialization;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -18,7 +20,7 @@ public class Demo {
 		List<Person> persons = readData(DATA_FILE);
 
 		if (!persons.isEmpty()) {
-			System.out.printf("Read data for %d persons from %n", persons.size(), DATA_FILE);
+			System.out.printf("Read data for %d persons from %s%n", persons.size(), DATA_FILE);
 		} else {
 			System.out.println("No data found in file. Generating random persons...");
 			generatePersons(persons);
@@ -32,8 +34,7 @@ public class Demo {
 	}
 
 	public static void generatePersons(List<Person> persons) {
-		// String fullName, long id, String accountNumber, String phone, String email,
-		// String address
+		// String fullName, long id, String accountNumber, String phone, String email, String address
 		try {
 			persons.add(new Person("J. J.", 12343333L, "XX-123", "0888-12334", "jj@gmail.com", "Varna"));
 			persons.add(new Person("B. J.", 66674555L, "XX-566", "0888-34555", "bj@gmail.com", "Sofia"));
@@ -45,7 +46,7 @@ public class Demo {
 
 	@SuppressWarnings("unchecked")
 	public static List<Person> readData(String file) {
-		try (ObjectInputStream input = new ObjectInputStream(new FileInputStream(file))) {
+		try (ObjectInputStream input = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
 			return (List<Person>) input.readObject();
 		} catch (FileNotFoundException e) {
 			System.out.println("File not found");
@@ -59,7 +60,7 @@ public class Demo {
 	}
 
 	public static boolean saveData(List<Person> persons, String file) {
-		try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(file))) {
+		try (ObjectOutputStream output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
 			output.writeObject(persons);
 		} catch (IOException e) {
 			System.out.println("Failed to save data to file");

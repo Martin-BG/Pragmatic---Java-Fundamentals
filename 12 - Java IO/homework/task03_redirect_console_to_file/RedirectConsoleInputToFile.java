@@ -2,6 +2,7 @@ package task03_redirect_console_to_file;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -27,6 +28,8 @@ public class RedirectConsoleInputToFile {
 			}
 
 			System.out.println(counter + " line(s) written to " + OUTPUT_FILE);
+		} catch (FileNotFoundException e) {
+			System.out.println("Cannot create output file: " + e.getMessage());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

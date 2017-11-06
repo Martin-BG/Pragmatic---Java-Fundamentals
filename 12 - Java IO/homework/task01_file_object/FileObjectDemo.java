@@ -8,14 +8,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class FileObjectDemo {
-
+	
+	static final String DEFAULT_FILE = "res/a.txt";
+	
 	public static void main(String[] args) {
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
 			
-			System.out.print("File to open (default: res/a.txt): ");
+			System.out.printf("File to open (default: %s): ", DEFAULT_FILE);
 			String path = reader.readLine().trim();
 			if (path == null || path.isEmpty()) {
-				path = "res/a.txt";
+				path = DEFAULT_FILE;
 			}
 			
 			try (BufferedInputStream input = new BufferedInputStream(new FileInputStream(path))) {
