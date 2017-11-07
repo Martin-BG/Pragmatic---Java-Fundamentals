@@ -9,8 +9,12 @@ public class LoginSuccessFrame extends JFrame {
 
 	private static final long serialVersionUID = -6299516173279938337L;
 
+	private static final String LOGGED_IN_TITLE = "Login Success";
+	private static final String LOGGED_IN_TEXT = "You have logged in";
+	private static final String OK_BUTTON_TITLE = "OK";
+
 	public LoginSuccessFrame() {
-		super("Login Success");
+		super(LOGGED_IN_TITLE);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -22,11 +26,11 @@ public class LoginSuccessFrame extends JFrame {
 	}
 	
 	private void createComponents() {
-		JLabel userNameTitleLabel = new JLabel("You have logged in", SwingConstants.CENTER);
+		JLabel userNameTitleLabel = new JLabel(LOGGED_IN_TEXT, SwingConstants.CENTER);
 		userNameTitleLabel.setBounds(0, 10, 200, 30);
 		add(userNameTitleLabel);
 
-		JButton okButton = new JButton("OK");
+		JButton okButton = new JButton(OK_BUTTON_TITLE);
 		okButton.setBounds(60, 50, 80, 30);
 		add(okButton);
 
