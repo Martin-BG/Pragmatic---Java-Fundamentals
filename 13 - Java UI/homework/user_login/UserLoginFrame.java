@@ -56,7 +56,17 @@ public class UserLoginFrame extends JFrame {
 		String userName = userNameTextField.getText();
 		String password = passwordTextField.getText();
 
-		if (userName != null && !userName.isEmpty() && password != null && !password.isEmpty()) {
+		if (userName == null || userName.isEmpty()) {
+			JOptionPane.showMessageDialog(this,
+					"No user name specified", 
+					"Login Error",
+					JOptionPane.ERROR_MESSAGE);
+		} else if (password == null || password.isEmpty()) {
+			JOptionPane.showMessageDialog(this,
+					"No password specified", 
+					"Login Error",
+					JOptionPane.ERROR_MESSAGE);
+		} else {
 			new LoginSuccessFrame().setVisible(true);
 			super.dispose();
 		}

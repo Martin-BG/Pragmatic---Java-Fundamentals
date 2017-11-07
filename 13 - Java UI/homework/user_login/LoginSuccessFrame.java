@@ -10,7 +10,7 @@ public class LoginSuccessFrame extends JFrame {
 	private static final long serialVersionUID = -6299516173279938337L;
 
 	public LoginSuccessFrame() {
-		super("User Login");
+		super("Login Success");
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
