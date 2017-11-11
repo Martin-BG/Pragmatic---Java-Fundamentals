@@ -16,7 +16,7 @@ public class PersonsStreamDemo {
 				new Person("Mihail", 134.7), 
 				new Person("Ivan", 176d));
 
-		persons.stream().forEach(p -> System.out.println(p.getInfo()));
+		persons.forEach(p -> System.out.println(p.getInfo()));
 
 		System.out.println("List of all persons names: " + getPersonNamesList(persons));
 
@@ -35,7 +35,7 @@ public class PersonsStreamDemo {
 		}
 	}
 
-	private static List<String> getPersonNamesList(Collection<Person> persons) {
+	private static Collection<String> getPersonNamesList(Collection<Person> persons) {
 		return persons.stream()
 				.map(Person::getName)
 				.collect(Collectors.toList());
