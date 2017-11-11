@@ -49,7 +49,8 @@ public class PersonsStreamDemo {
 
 	private static Optional<Person> getHighestPerson(Collection<Person> persons) {
 		return persons.stream()
-				.sorted((x, y) -> Double.compare(y.getHeight(), x.getHeight()))
+				.sorted(Comparator.comparing(Person::getHeight).reversed())
+				//.sorted((x, y) -> Double.compare(y.getHeight(), x.getHeight()))
 				.findFirst();
 	}
 }
