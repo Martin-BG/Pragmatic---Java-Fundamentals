@@ -21,33 +21,68 @@ public class Book {
 	
 	private void setTitle(String title) throws BookException {
 		if (title == null || title.trim().isEmpty()) {
-			throw new BookException();
+			throw new BookException("No valid title specified");
 		}
 		this.title = title.trim();
 	}
 	
 	private void setAuthor(String author) throws BookException {
 		if (author == null || author.trim().isEmpty()) {
-			throw new BookException();
+			throw new BookException("No valid author specified");
 		}
 		this.author = author.trim();
 	}
 	
 	private void setPrice(double price) throws BookException {
 		if (price <= 0d) {
-			throw new BookException();
+			throw new BookException("Invalid price: " + price);
 		}
 		this.price = price;
 	}
 	
 	private void setPublisher(String publisher) throws BookException {
 		if (publisher == null || publisher.trim().isEmpty()) {
-			throw new BookException();
+			throw new BookException("No valid publisher specified");
 		}
 		this.publisher = publisher.trim();
 	}
 	
 	private void setForeign(boolean isForeign) {
 		this.isForeign = isForeign;
+	}
+
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * @return the author
+	 */
+	public String getAuthor() {
+		return author;
+	}
+
+	/**
+	 * @return the price
+	 */
+	public double getPrice() {
+		return price;
+	}
+
+	/**
+	 * @return the publisher
+	 */
+	public String getPublisher() {
+		return publisher;
+	}
+
+	/**
+	 * @return the isForeign
+	 */
+	public boolean isForeign() {
+		return isForeign;
 	}
 }
