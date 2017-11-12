@@ -18,8 +18,6 @@ public class CheckForThreeDigitsNumberInList {
 
 	private static boolean hasThreeDigitsNumber(Collection<Integer> numbers) {
 		return numbers.stream()
-				.filter(x -> (x > 99 && x < 1000) || (x < -99 && x > -1000))
-				.findFirst()
-				.isPresent();
+				.anyMatch(x -> (x > 99 && x < 1000) || (x < -99 && x > -1000));
 	}
 }
