@@ -20,12 +20,7 @@ public class PersonsStreamDemo {
 
 		System.out.println("List of all persons names: " + getPersonNamesList(persons));
 
-		Optional<Integer> longestNamelength = getLongestNameLength(persons);
-		if (longestNamelength.isPresent()) {
-			System.out.println("Symbols in longest name in the list: " + longestNamelength.get());
-		} else {
-			System.out.println("No valid names found in list");
-		}
+		System.out.println("Symbols in longest name in the list: " + getLongestNameLength(persons));
 
 		Optional<Person> highestPerson = getHighestPerson(persons);
 		if (highestPerson.isPresent()) {
@@ -41,10 +36,11 @@ public class PersonsStreamDemo {
 				.collect(Collectors.toList());
 	}
 
-	private static Optional<Integer> getLongestNameLength(Collection<Person> persons) {
+	private static int getLongestNameLength(Collection<Person> persons) {
 		return persons.stream()
 				.map(x -> x.getName().length())
-				.max(Comparator.naturalOrder());
+				.max(Comparator.naturalOrder())
+				.orElse(0);
 	}
 
 	private static Optional<Person> getHighestPerson(Collection<Person> persons) {
