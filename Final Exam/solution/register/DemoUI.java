@@ -4,7 +4,7 @@ import register.controller.RegisterController;
 import register.model.History;
 import register.model.Register;
 import register.persistance.PersistanceManager;
-import register.ui.RegisterFrame;
+import register.view.RegisterFrame;
 
 public class DemoUI {
 

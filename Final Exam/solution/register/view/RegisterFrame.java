@@ -1,4 +1,4 @@
-package register.ui;
+package register.view;
 
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
