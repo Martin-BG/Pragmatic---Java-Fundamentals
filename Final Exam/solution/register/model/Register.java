@@ -1,29 +1,19 @@
 package register.model;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import register.persistance.SavingException;
 import register.model.Entry;
-import register.persistance.LoadingException;
-import register.persistance.PersistanceManager;
 
 public class Register {
 
 	private List<Entry> entries;
 
-	public Register() {
+	public Register(Collection<Entry> entries) {
 		super();
-		entries = new LinkedList<>();
-	}
-	
-	public Register(String file) throws LoadingException {
-		super();
-		load(file);
-	}
-
-	public List<Entry> getEntries() {
-		return entries;
+		initEntries(entries);
 	}
 
 	public Entry deleteEntry(int selectedRow) {
@@ -39,11 +29,15 @@ public class Register {
 		}
 	}
 
-	public void load(String file) throws LoadingException {
-		entries = new LinkedList<>(PersistanceManager.getInstance().load(file));
+	public void initEntries(Collection<Entry> entries) {
+		if (entries != null) {
+			this.entries = new LinkedList<>(entries);
+		} else {
+			this.entries = new LinkedList<>();
+		}
 	}
-
-	public void save(String file) throws SavingException {
-		PersistanceManager.getInstance().save(entries, file);
+	
+	public Collection<Entry> getEntries() {
+		return Collections.unmodifiableCollection(entries);
 	}
 }

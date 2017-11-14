@@ -9,10 +9,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import register.controller.RegisterController;
 import register.model.Entry;
-import register.model.History;
-import register.model.IndexedEntry;
-import register.model.Register;
 import register.model.RegisterTableModel;
 import register.persistance.LoadingException;
 import register.persistance.SavingException;
@@ -23,19 +21,21 @@ public class RegisterFrame extends JFrame {
 	private static final String DEFAULT_FILE = "resources/animals.lostandfound.csv";
 
 	private RegisterTableModel tableModel;
-	private History history;
-	private Register register;
+	private JButton deleteRowButton;
+	private JButton undoButton;
+	private JTable table;
+	
+	RegisterController registerController;
 
-	public RegisterFrame() {
+	public RegisterFrame(RegisterController registerController) {
 		super("Register");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 500);
 		setLayout(null);
 		setResizable(false);
 
-		register = new Register();
-		tableModel = new RegisterTableModel(register.getEntries());
-		history = History.getInstance();
+		this.registerController = registerController;
+		tableModel = new RegisterTableModel(this.registerController.getEntries());
 
 		createUI();
 	}
@@ -44,7 +44,7 @@ public class RegisterFrame extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 10, 670, 375);
 		add(scrollPane);
-		JTable table = new JTable();
+		table = new JTable();
 		scrollPane.setViewportView(table);
 		table.setModel(tableModel);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -57,12 +57,12 @@ public class RegisterFrame extends JFrame {
 		saveFileButton.setBounds(140, 405, 120, 40);
 		add(saveFileButton);
 		
-		JButton deleteRowButton = new JButton("Delete");
+		deleteRowButton = new JButton("Delete");
 		deleteRowButton.setBounds(430, 405, 120, 40);
 		add(deleteRowButton);
 		deleteRowButton.setEnabled(false);
 
-		JButton undoButton = new JButton("Undo");
+		undoButton = new JButton("Undo");
 		undoButton.setBounds(560, 405, 120, 40);
 		add(undoButton);
 		undoButton.setEnabled(false);
@@ -72,14 +72,14 @@ public class RegisterFrame extends JFrame {
 			JLabel picLabel = new JLabel(new ImageIcon(myPicture));
 			picLabel.setBounds(280, 390, 130, 75); 
 			add(picLabel);
-		} catch (IOException e2) {
+		} catch (IOException e) {
 			
 		}
 	
-		loadFileButton.addActionListener(loadButtonAction(undoButton));
+		loadFileButton.addActionListener(loadButtonAction());
 		saveFileButton.addActionListener(saveButtonAction());
-		deleteRowButton.addActionListener(deleteRowButtonAction(table, deleteRowButton, undoButton));
-		undoButton.addActionListener(undoButtonAction(undoButton));
+		deleteRowButton.addActionListener(deleteRowButtonAction());
+		undoButton.addActionListener(undoButtonAction());
 
 		table.getSelectionModel().addListSelectionListener(e -> {
 			if (table.getSelectedRow() == -1) {
@@ -90,27 +90,27 @@ public class RegisterFrame extends JFrame {
 		});
 	}
 
-	private ActionListener undoButtonAction(JButton undoButton) {
+	private void updateTableAndButtonsState() {
+		tableModel.setEntries(registerController.getEntries());
+		undoButton.setEnabled(registerController.canUndo());
+	}
+
+	private ActionListener undoButtonAction() {
 		return e -> {
-			if (!history.isEmpty()) {
-				IndexedEntry indexedEntry = history.pop();
-				register.addEntry(indexedEntry.getEntry(), indexedEntry.getIndex());
-				tableModel.setEntries(register.getEntries());
-				undoButton.setEnabled(!history.isEmpty());
+			if (registerController.undoLast()) {
+				updateTableAndButtonsState();
 			}
 		};
 	}
 
-	private ActionListener deleteRowButtonAction(JTable table, JButton deleteRowButton, JButton undoButton) {
+	private ActionListener deleteRowButtonAction() {
 		return e -> {
 			int row = table.getSelectedRow();
 			if (row != -1) {
-				Entry entry = register.deleteEntry(row);
+				Entry entry = registerController.deleteEntry(row);
 				if (entry != null) {
-					history.push(entry, row);
-					tableModel.setEntries(register.getEntries());
+					updateTableAndButtonsState();
 					deleteRowButton.setEnabled(false);
-					undoButton.setEnabled(!history.isEmpty());
 				}
 			}
 		};
@@ -133,7 +133,7 @@ public class RegisterFrame extends JFrame {
 				}
 
 				try {
-					register.save(fileToSave);
+					registerController.saveData(fileToSave);
 					JOptionPane.showMessageDialog(this, 
 							"Data saved to " + fileToSave, 
 							"Save Success",
@@ -148,7 +148,7 @@ public class RegisterFrame extends JFrame {
 		};
 	}
 	
-	private ActionListener loadButtonAction(JButton undoButton) {
+	private ActionListener loadButtonAction() {
 		return e -> {
 			JFileChooser fileChooser = new JFileChooser(DEFAULT_FILE);
 			fileChooser.setDialogTitle("Select file to load");
@@ -158,18 +158,19 @@ public class RegisterFrame extends JFrame {
 
 			int returnValue = fileChooser.showOpenDialog(null);
 			if (returnValue == JFileChooser.APPROVE_OPTION) {
+				String fileToLoadFrom = fileChooser.getSelectedFile().getPath();
+				
 				try {
-					register = new Register(fileChooser.getSelectedFile().getPath());
-					tableModel.setEntries(register.getEntries());
-					history.clear();
-					undoButton.setEnabled(!history.isEmpty());
+					registerController.loadData(fileToLoadFrom);
+					updateTableAndButtonsState();
+
 					JOptionPane.showMessageDialog(this, 
-							"Data loaded from " + fileChooser.getSelectedFile().getPath(),
+							"Data loaded from " + fileToLoadFrom,
 							"Data Load Success", 
 							JOptionPane.INFORMATION_MESSAGE);
 				} catch (LoadingException e1) {
 					JOptionPane.showMessageDialog(this, 
-							"Invalid file: " + fileChooser.getSelectedFile().getPath(),
+							"Invalid file: " + fileToLoadFrom,
 							"Load Error", 
 							JOptionPane.ERROR_MESSAGE);
 				}

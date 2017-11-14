@@ -1,6 +1,7 @@
 package register.model;
 
 public class IndexedEntry {
+	
 	private int index;
 	private Entry entry;
 

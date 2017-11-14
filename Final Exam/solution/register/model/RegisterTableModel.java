@@ -1,6 +1,9 @@
 package register.model;
 
 import javax.swing.table.AbstractTableModel;
+
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import register.model.Entry;
 
@@ -9,13 +12,13 @@ public class RegisterTableModel extends AbstractTableModel {
 
 	private List<Entry> entries;
 
-	public RegisterTableModel(List<Entry> entries) {
+	public RegisterTableModel(Collection<Entry> entries) {
 		super();
 		this.setEntries(entries);
 	}
 
-	public void setEntries(List<Entry> entries) {
-		this.entries = entries;
+	public void setEntries(Collection<Entry> entries) {
+		this.entries = new ArrayList<Entry>(entries);
 		fireTableDataChanged();
 	}
 

@@ -19,6 +19,10 @@ public final class PersistanceManager {
 	
 	private static final String SEPARATOR = ",";
 	
+	private PersistanceManager() {
+		
+	}
+	
 	public static PersistanceManager getInstance() {
 		return INSTANCE;
 	}

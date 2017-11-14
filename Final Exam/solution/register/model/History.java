@@ -4,16 +4,10 @@ import java.util.Stack;
 
 public class History {
 
-	private static final History INSTANCE = new History();
-
 	private Stack<IndexedEntry> history;
 
-	private History() {
+	public History() {
 		history = new Stack<>();
-	}
-
-	public static History getInstance() {
-		return INSTANCE;
 	}
 
 	public void push(Entry entry, int index) {
