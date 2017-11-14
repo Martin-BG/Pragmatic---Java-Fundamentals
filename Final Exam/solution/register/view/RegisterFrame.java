@@ -28,7 +28,7 @@ public class RegisterFrame extends JFrame {
 	RegisterController registerController;
 
 	public RegisterFrame(RegisterController registerController) {
-		super("Register");
+		super("Missing Pets Register");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 500);
 		setLayout(null);
@@ -138,7 +138,7 @@ public class RegisterFrame extends JFrame {
 							"Data saved to " + fileToSave, 
 							"Save Success",
 							JOptionPane.INFORMATION_MESSAGE);
-				} catch (SavingException e1) {
+				} catch (SavingException ex) {
 					JOptionPane.showMessageDialog(this, 
 							"Failed to save file: " + fileToSave,
 							"Save Error", 
@@ -168,7 +168,7 @@ public class RegisterFrame extends JFrame {
 							"Data loaded from " + fileToLoadFrom,
 							"Data Load Success", 
 							JOptionPane.INFORMATION_MESSAGE);
-				} catch (LoadingException e1) {
+				} catch (LoadingException ex) {
 					JOptionPane.showMessageDialog(this, 
 							"Invalid file: " + fileToLoadFrom,
 							"Load Error", 
