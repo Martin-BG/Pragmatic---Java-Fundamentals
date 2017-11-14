@@ -2,20 +2,20 @@ package register.model;
 
 import java.util.Stack;
 
-public class HistoryModel {
+public class History {
 
-	private static final HistoryModel INSTANCE = new HistoryModel();
-	
+	private static final History INSTANCE = new History();
+
 	private Stack<IndexedEntry> history;
 
-	private HistoryModel() {
+	private History() {
 		history = new Stack<>();
 	}
 
-	public static HistoryModel getInstance() {
+	public static History getInstance() {
 		return INSTANCE;
 	}
-	
+
 	public void push(Entry entry, int index) {
 		history.push(new IndexedEntry(entry, index));
 	}
@@ -26,5 +26,9 @@ public class HistoryModel {
 
 	public boolean isEmpty() {
 		return history.isEmpty();
+	}
+
+	public void clear() {
+		history.clear();
 	}
 }

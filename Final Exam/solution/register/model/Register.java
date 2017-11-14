@@ -5,13 +5,19 @@ import java.util.List;
 
 import register.persistance.SavingException;
 import register.model.Entry;
+import register.persistance.LoadingException;
 import register.persistance.PersistanceManager;
 
 public class Register {
 
 	private List<Entry> entries;
 
-	public Register(String file) {
+	public Register() {
+		super();
+		entries = new LinkedList<>();
+	}
+	
+	public Register(String file) throws LoadingException {
 		super();
 		load(file);
 	}
@@ -20,10 +26,11 @@ public class Register {
 		return entries;
 	}
 
-	public void deleteEntry(int selectedRow) {
+	public Entry deleteEntry(int selectedRow) {
 		if (selectedRow >= 0 && selectedRow < entries.size()) {
-			entries.remove(selectedRow);
+			return entries.remove(selectedRow);
 		}
+		return null;
 	}
 
 	public void addEntry(Entry entry, int index) {
@@ -32,14 +39,7 @@ public class Register {
 		}
 	}
 
-	public Entry getEntry(int index) {
-		if (index >= 0 && index < entries.size()) {
-			return entries.get(index);
-		}
-		return null;
-	}
-	
-	public void load(String file) {
+	public void load(String file) throws LoadingException {
 		entries = new LinkedList<>(PersistanceManager.getInstance().load(file));
 	}
 

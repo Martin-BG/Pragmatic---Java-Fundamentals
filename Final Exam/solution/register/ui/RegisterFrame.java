@@ -1,28 +1,29 @@
 package register.ui;
 
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import register.model.HistoryModel;
+import register.model.Entry;
+import register.model.History;
 import register.model.IndexedEntry;
 import register.model.Register;
 import register.model.RegisterTableModel;
+import register.persistance.LoadingException;
 import register.persistance.SavingException;
 
 @SuppressWarnings("serial")
 public class RegisterFrame extends JFrame {
-	static final String DEFAULT_INPUT_FILE = "resources/animals.lostandfound.csv2";
+	private static final String PET_ICON_FILE = "resources/pet.png";
+	private static final String DEFAULT_FILE = "resources/animals.lostandfound.csv";
 
 	private RegisterTableModel tableModel;
-	private HistoryModel history;
-	private int selectedRow;
-
+	private History history;
 	private Register register;
 
 	public RegisterFrame() {
@@ -30,123 +31,149 @@ public class RegisterFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 500);
 		setLayout(null);
-		register = new Register(DEFAULT_INPUT_FILE);
-		history = HistoryModel.getInstance();
+		setResizable(false);
+
+		register = new Register();
+		tableModel = new RegisterTableModel(register.getEntries());
+		history = History.getInstance();
+
 		createUI();
 	}
 
 	private void createUI() {
-		// Table
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 10, 660, 375);
+		scrollPane.setBounds(10, 10, 670, 375);
 		add(scrollPane);
-
 		JTable table = new JTable();
 		scrollPane.setViewportView(table);
-
-		tableModel = new RegisterTableModel();
-		tableModel.setEntries(register.getEntries());
 		table.setModel(tableModel);
-		
-		/////
-
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		ListSelectionModel rowSelectionModel = table.getSelectionModel();
-		rowSelectionModel.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent e) {
-				// Ignore extra messages.
-				if (e.getValueIsAdjusting())
-					return;
 
-				ListSelectionModel lsm = (ListSelectionModel) e.getSource();
-				if (lsm.isSelectionEmpty()) {
-					selectedRow = -1;
-					// System.out.println("No rows are selected.");
-				} else {
-					selectedRow = lsm.getMinSelectionIndex();
-					// System.out.println("Row " + selectedRow + " is now selected.");
-				}
-			}
-		});
-
-		/////
 		JButton loadFileButton = new JButton("Load");
-		loadFileButton.setBounds(10, 400, 120, 40);
+		loadFileButton.setBounds(10, 405, 120, 40);
 		add(loadFileButton);
-		loadFileButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser fileChoser = new JFileChooser("resources/animals.lostandfound.csv");
-				fileChoser.setDialogTitle("Select file to load");
-				fileChoser.setAcceptAllFileFilterUsed(false);
-				FileNameExtensionFilter filter = new FileNameExtensionFilter("CSV", "csv");
-				fileChoser.addChoosableFileFilter(filter);
-
-				int returnValue = fileChoser.showOpenDialog(null);
-				if (returnValue == JFileChooser.APPROVE_OPTION) {
-					System.out.println(fileChoser.getSelectedFile().getPath());
-
-					register = new Register(fileChoser.getSelectedFile().getPath());
-					tableModel.setEntries(register.getEntries());
-				}
-			}
-		});
-
+		
 		JButton saveFileButton = new JButton("Save");
-		saveFileButton.setBounds(140, 400, 120, 40);
+		saveFileButton.setBounds(140, 405, 120, 40);
 		add(saveFileButton);
-		saveFileButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JFrame parentFrame = new JFrame();
-				JFileChooser fileChooser = new JFileChooser("resources/animals.lostandfound.csv");
-				fileChooser.setDialogTitle("Specify a file to save");
-
-				int userSelection = fileChooser.showSaveDialog(parentFrame);
-
-				if (userSelection == JFileChooser.APPROVE_OPTION) {
-					File fileToSave = fileChooser.getSelectedFile();
-
-					try {
-						register.save(fileToSave.getAbsolutePath());
-					} catch (SavingException e1) {
-						// TODO - add dialog
-						System.out.println("Failed to save file: " + fileToSave.getAbsolutePath());
-					}
-				}
-			}
-		});
-
-		JButton deleteRowButton = new JButton("Delete Selected Row");
-		deleteRowButton.setBounds(270, 400, 200, 40);
+		
+		JButton deleteRowButton = new JButton("Delete");
+		deleteRowButton.setBounds(430, 405, 120, 40);
 		add(deleteRowButton);
-		deleteRowButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (selectedRow >= 0) {
-					history.push(register.getEntry(selectedRow), selectedRow);
-					register.deleteEntry(selectedRow);
-					tableModel.setEntries(register.getEntries());
-				}
-			}
-		});
+		deleteRowButton.setEnabled(false);
 
 		JButton undoButton = new JButton("Undo");
-		undoButton.setBounds(550, 400, 120, 40);
+		undoButton.setBounds(560, 405, 120, 40);
 		add(undoButton);
-		undoButton.addActionListener(new ActionListener() {
+		undoButton.setEnabled(false);
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (!history.isEmpty()) {
-					IndexedEntry indexedEntry = history.pop();
-					register.addEntry(indexedEntry.getEntry(), indexedEntry.getIndex());
-					tableModel.setEntries(register.getEntries());
-				}
+		try {
+			BufferedImage myPicture = ImageIO.read(new File(PET_ICON_FILE));
+			JLabel picLabel = new JLabel(new ImageIcon(myPicture));
+			picLabel.setBounds(280, 390, 130, 75); 
+			add(picLabel);
+		} catch (IOException e2) {
+			
+		}
+	
+		loadFileButton.addActionListener(loadButtonAction(undoButton));
+		saveFileButton.addActionListener(saveButtonAction());
+		deleteRowButton.addActionListener(deleteRowButtonAction(table, deleteRowButton, undoButton));
+		undoButton.addActionListener(undoButtonAction(undoButton));
+
+		table.getSelectionModel().addListSelectionListener(e -> {
+			if (table.getSelectedRow() == -1) {
+				deleteRowButton.setEnabled(false);
+			} else {
+				deleteRowButton.setEnabled(true);
 			}
 		});
+	}
+
+	private ActionListener undoButtonAction(JButton undoButton) {
+		return e -> {
+			if (!history.isEmpty()) {
+				IndexedEntry indexedEntry = history.pop();
+				register.addEntry(indexedEntry.getEntry(), indexedEntry.getIndex());
+				tableModel.setEntries(register.getEntries());
+				undoButton.setEnabled(!history.isEmpty());
+			}
+		};
+	}
+
+	private ActionListener deleteRowButtonAction(JTable table, JButton deleteRowButton, JButton undoButton) {
+		return e -> {
+			int row = table.getSelectedRow();
+			if (row != -1) {
+				Entry entry = register.deleteEntry(row);
+				if (entry != null) {
+					history.push(entry, row);
+					tableModel.setEntries(register.getEntries());
+					deleteRowButton.setEnabled(false);
+					undoButton.setEnabled(!history.isEmpty());
+				}
+			}
+		};
+	}
+	
+	private ActionListener saveButtonAction() {
+		return e -> {
+			JFrame parentFrame = new JFrame();
+			JFileChooser fileChooser = new JFileChooser(DEFAULT_FILE);
+			fileChooser.setDialogTitle("Specify a file to save");
+			fileChooser.setAcceptAllFileFilterUsed(false);
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("Comma Separated Values (*.csv)", "csv");
+			fileChooser.addChoosableFileFilter(filter);
+			
+			if (fileChooser.showSaveDialog(parentFrame) == JFileChooser.APPROVE_OPTION) {
+				String fileToSave = fileChooser.getSelectedFile().getAbsolutePath();
+				
+				if (!fileToSave.toLowerCase().endsWith(".csv")) {
+					fileToSave = fileToSave + ".csv";
+				}
+
+				try {
+					register.save(fileToSave);
+					JOptionPane.showMessageDialog(this, 
+							"Data saved to " + fileToSave, 
+							"Save Success",
+							JOptionPane.INFORMATION_MESSAGE);
+				} catch (SavingException e1) {
+					JOptionPane.showMessageDialog(this, 
+							"Failed to save file: " + fileToSave,
+							"Save Error", 
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		};
+	}
+	
+	private ActionListener loadButtonAction(JButton undoButton) {
+		return e -> {
+			JFileChooser fileChooser = new JFileChooser(DEFAULT_FILE);
+			fileChooser.setDialogTitle("Select file to load");
+			fileChooser.setAcceptAllFileFilterUsed(false);
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("Comma Separated Values (*.csv)", "csv");
+			fileChooser.addChoosableFileFilter(filter);
+
+			int returnValue = fileChooser.showOpenDialog(null);
+			if (returnValue == JFileChooser.APPROVE_OPTION) {
+				try {
+					register = new Register(fileChooser.getSelectedFile().getPath());
+					tableModel.setEntries(register.getEntries());
+					history.clear();
+					undoButton.setEnabled(!history.isEmpty());
+					JOptionPane.showMessageDialog(this, 
+							"Data loaded from " + fileChooser.getSelectedFile().getPath(),
+							"Data Load Success", 
+							JOptionPane.INFORMATION_MESSAGE);
+				} catch (LoadingException e1) {
+					JOptionPane.showMessageDialog(this, 
+							"Invalid file: " + fileChooser.getSelectedFile().getPath(),
+							"Load Error", 
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		};
 	}
 }

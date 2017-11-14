@@ -9,6 +9,11 @@ public class RegisterTableModel extends AbstractTableModel {
 
 	private List<Entry> entries;
 
+	public RegisterTableModel(List<Entry> entries) {
+		super();
+		this.setEntries(entries);
+	}
+
 	public void setEntries(List<Entry> entries) {
 		this.entries = entries;
 		fireTableDataChanged();

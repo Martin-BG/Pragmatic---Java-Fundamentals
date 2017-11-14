@@ -34,7 +34,7 @@ public final class PersistanceManager {
 		}
 	}
 	
-	public Collection<Entry> load(String file) {
+	public Collection<Entry> load(String file) throws LoadingException {
 		Collection<Entry> entries = new ArrayList<>();
 		
 		try (Scanner sc = new Scanner(new BufferedInputStream(new FileInputStream(file)))) {			
@@ -44,7 +44,7 @@ public final class PersistanceManager {
 				entries.add(entry);
 			}
 		} catch (FileNotFoundException e) {
-			return entries;		
+			throw new LoadingException();		
 		}
 		
 		return entries;

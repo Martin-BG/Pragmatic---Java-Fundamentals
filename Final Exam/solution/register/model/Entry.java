@@ -1,7 +1,7 @@
 package register.model;
 
 public class Entry {
-	
+
 	private String date;
 	private String color;
 	private String breed;
@@ -9,9 +9,9 @@ public class Entry {
 	private String state;
 	private String name;
 	private String dateCreated;
-	
-	public Entry(String date, String color, String breed, 
-			String sex, String state, String name, String dateCreated) {
+
+	public Entry(String date, String color, String breed, String sex, 
+			String state, String name, String dateCreated) {
 		super();
 		this.date = date;
 		this.color = color;
