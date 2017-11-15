@@ -1,22 +1,18 @@
-package register.controller;
+package register.model;
 
 import java.util.Collection;
 
-import register.model.Entry;
-import register.model.History;
-import register.model.IndexedEntry;
-import register.model.Register;
 import register.persistance.LoadingException;
 import register.persistance.PersistanceManager;
 import register.persistance.SavingException;
 
-public final class RegisterController {
+public final class RegisterManager {
 
 	private PersistanceManager persistanceManager;
 	private History history;
 	private Register register;
 
-	public RegisterController(PersistanceManager persistanceManager, History history, Register register) {
+	public RegisterManager(PersistanceManager persistanceManager, History history, Register register) {
 		super();
 		this.persistanceManager = persistanceManager;
 		this.history = history;

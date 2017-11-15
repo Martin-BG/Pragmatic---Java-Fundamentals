@@ -1,15 +1,15 @@
 package register;
 
-import register.controller.RegisterController;
+import register.controller.RegisterFrame;
 import register.model.History;
 import register.model.Register;
+import register.model.RegisterManager;
 import register.persistance.PersistanceManager;
-import register.view.RegisterFrame;
 
 public class DemoUI {
 
 	public static void main(String[] args) {
-		RegisterController registerController = new RegisterController(PersistanceManager.getInstance(), new History(), new Register(null));
+		RegisterManager registerController = new RegisterManager(PersistanceManager.getInstance(), new History(), new Register(null));
 		RegisterFrame frame = new RegisterFrame(registerController);
 		frame.setVisible(true);
 	}
