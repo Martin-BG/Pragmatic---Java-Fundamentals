@@ -1,5 +1,6 @@
 package register.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import register.persistance.LoadingException;
@@ -28,30 +29,44 @@ public final class RegisterManager {
 		PersistanceManager.getInstance().save(getEntries(), file);
 	}
 
-	public Entry deleteEntry(int index) {
-		Entry entry = register.deleteEntry(index);
-		if (entry != null) {
-			history.push(entry, index);
-			return entry;
+	public void deleteEntries(int[] indexes) {
+		int deletedEntries = 0;
+		for (int index = indexes.length -1; index >= 0; index--) {
+			if (deleteEntry(indexes[index])) {
+				deletedEntries++;
+			}
 		}
-		return null;
+		history.pushEntriesCount(deletedEntries);
 	}
-
+	
 	public Entry getEntry(int index) {
 		return register.getEntry(index);
 	}
 
-	public boolean undoLast() {
+	public Collection<Integer> undoLast() {
+		Collection<Integer> restoredRows = new ArrayList<>(); 
 		if (canUndo()) {
-			IndexedEntry indexedEntry = history.pop();
-			addEntry(indexedEntry.getEntry(), indexedEntry.getIndex());
-			return true;
+			int lastDeletedCount = history.popEntriesCount();
+			for (int i = 0; i < lastDeletedCount; i++) {
+				IndexedEntry indexedEntry = history.pop();
+				addEntry(indexedEntry.getEntry(), indexedEntry.getIndex());
+				restoredRows.add(indexedEntry.getIndex());
+			}
 		}
-		return false;
+		return restoredRows;
 	}
 	
 	private void addEntry(Entry entry, int index) {
 		register.addEntry(entry, index);
+	}
+	
+	private boolean deleteEntry(int index) {
+		Entry entry = register.deleteEntry(index);
+		if (entry != null) {
+			history.push(entry, index);
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean canUndo() {

@@ -2,12 +2,12 @@ package register.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import register.model.Entry;
 import register.model.RegisterManager;
 import register.model.RegisterTableModel;
 import register.persistance.LoadingException;
@@ -18,21 +18,21 @@ public class RegisterFrame extends JFrame {
 	private static final String PET_ICON_FILE = "resources/pet.png";
 	private static final String DEFAULT_FILE = "resources/animals.lostandfound.csv";
 
-	private RegisterManager registerController;
+	private RegisterManager registerManager;
 	private RegisterTableModel tableModel;
-	private JButton deleteRowButton;
+	private JButton deleteButton;
 	private JButton undoButton;
 	private JTable table;
 	
-	public RegisterFrame(RegisterManager registerController) {
+	public RegisterFrame(RegisterManager registerManager) {
 		super("Missing Pets Register");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 500);
 		setLayout(null);
 		setResizable(false);
 
-		this.registerController = registerController;
-		tableModel = new RegisterTableModel(this.registerController);
+		this.registerManager = registerManager;
+		tableModel = new RegisterTableModel(this.registerManager);
 
 		createUI();
 	}
@@ -44,7 +44,6 @@ public class RegisterFrame extends JFrame {
 		table = new JTable();
 		scrollPane.setViewportView(table);
 		table.setModel(tableModel);
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		JButton loadFileButton = new JButton("Load");
 		loadFileButton.setBounds(10, 405, 120, 40);
@@ -54,9 +53,9 @@ public class RegisterFrame extends JFrame {
 		saveFileButton.setBounds(140, 405, 120, 40);
 		add(saveFileButton);
 		
-		deleteRowButton = new JButton("Delete");
-		deleteRowButton.setBounds(430, 405, 120, 40);
-		add(deleteRowButton);
+		deleteButton = new JButton("Delete");
+		deleteButton.setBounds(430, 405, 120, 40);
+		add(deleteButton);
 
 		undoButton = new JButton("Undo");
 		undoButton.setBounds(560, 405, 120, 40);
@@ -70,7 +69,7 @@ public class RegisterFrame extends JFrame {
 	
 		loadFileButton.addActionListener(e -> loadButtonAction());
 		saveFileButton.addActionListener(e -> saveButtonAction());
-		deleteRowButton.addActionListener(e -> deleteRowButtonAction());
+		deleteButton.addActionListener(e -> deleteButtonAction());
 		undoButton.addActionListener(e -> undoButtonAction());
 		table.getSelectionModel().addListSelectionListener(e -> updateDeleteButton());
 		
@@ -78,11 +77,11 @@ public class RegisterFrame extends JFrame {
 	}
 
 	private void updateDeleteButton() {
-		deleteRowButton.setEnabled(table.getSelectedRow() != -1);
+		deleteButton.setEnabled(table.getSelectedRow() != -1);
 	}
 	
 	private void updateUndoButton() {
-		undoButton.setEnabled(registerController.canUndo());
+		undoButton.setEnabled(registerManager.canUndo());
 	}
 	
 	private void updateTableAndButtonsState() {
@@ -92,18 +91,17 @@ public class RegisterFrame extends JFrame {
 	}
 
 	private void undoButtonAction() {
-		if (registerController.undoLast()) {
+		Collection<Integer> restoredRows = registerManager.undoLast();
+		if (!restoredRows.isEmpty()) {
 			updateTableAndButtonsState();
+			restoredRows.forEach(row -> table.changeSelection(row, 0, true, false));
 		}
 	}
 
-	private void deleteRowButtonAction() {
-		int row = table.getSelectedRow();
-		if (row != -1) {
-			Entry entry = registerController.deleteEntry(row);
-			if (entry != null) {
-				updateTableAndButtonsState();
-			}
+	private void deleteButtonAction() {
+		if (table.getSelectedRowCount() > 0) {
+			registerManager.deleteEntries(table.getSelectedRows());
+			updateTableAndButtonsState();
 		}
 	}
 	
@@ -118,7 +116,7 @@ public class RegisterFrame extends JFrame {
 			}
 
 			try {
-				registerController.saveData(fileToSave);
+				registerManager.saveData(fileToSave);
 				JOptionPane.showMessageDialog(this, 
 						"Data saved to " + fileToSave, 
 						"Save Success",
@@ -139,7 +137,7 @@ public class RegisterFrame extends JFrame {
 			String fileToLoadFrom = fileChooser.getSelectedFile().getPath();
 			
 			try {
-				registerController.loadData(fileToLoadFrom);
+				registerManager.loadData(fileToLoadFrom);
 				updateTableAndButtonsState();
 
 				JOptionPane.showMessageDialog(this, 
