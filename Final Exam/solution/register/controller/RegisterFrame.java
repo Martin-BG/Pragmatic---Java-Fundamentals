@@ -18,13 +18,12 @@ public class RegisterFrame extends JFrame {
 	private static final String PET_ICON_FILE = "resources/pet.png";
 	private static final String DEFAULT_FILE = "resources/animals.lostandfound.csv";
 
+	private RegisterManager registerController;
 	private RegisterTableModel tableModel;
 	private JButton deleteRowButton;
 	private JButton undoButton;
 	private JTable table;
 	
-	RegisterManager registerController;
-
 	public RegisterFrame(RegisterManager registerController) {
 		super("Missing Pets Register");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -109,14 +108,9 @@ public class RegisterFrame extends JFrame {
 	}
 	
 	private void saveButtonAction() {
-		JFrame parentFrame = new JFrame();
-		JFileChooser fileChooser = new JFileChooser(DEFAULT_FILE);
-		fileChooser.setDialogTitle("Specify a file to save");
-		fileChooser.setAcceptAllFileFilterUsed(false);
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("Comma Separated Values (*.csv)", "csv");
-		fileChooser.addChoosableFileFilter(filter);
+		JFileChooser fileChooser = getFileChooser("Save to File");
 		
-		if (fileChooser.showSaveDialog(parentFrame) == JFileChooser.APPROVE_OPTION) {
+		if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
 			String fileToSave = fileChooser.getSelectedFile().getAbsolutePath();
 			
 			if (!fileToSave.toLowerCase().endsWith(".csv")) {
@@ -139,14 +133,9 @@ public class RegisterFrame extends JFrame {
 	}
 	
 	private void loadButtonAction() {
-		JFileChooser fileChooser = new JFileChooser(DEFAULT_FILE);
-		fileChooser.setDialogTitle("Select file to load");
-		fileChooser.setAcceptAllFileFilterUsed(false);
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("Comma Separated Values (*.csv)", "csv");
-		fileChooser.addChoosableFileFilter(filter);
+		JFileChooser fileChooser = getFileChooser("Load from File");
 
-		int returnValue = fileChooser.showOpenDialog(null);
-		if (returnValue == JFileChooser.APPROVE_OPTION) {
+		if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 			String fileToLoadFrom = fileChooser.getSelectedFile().getPath();
 			
 			try {
@@ -164,5 +153,13 @@ public class RegisterFrame extends JFrame {
 						JOptionPane.ERROR_MESSAGE);
 			}
 		}
+	}
+	
+	private JFileChooser getFileChooser(String dialogTitle) {
+		JFileChooser fileChooser = new JFileChooser(DEFAULT_FILE);
+		fileChooser.setDialogTitle(dialogTitle);
+		fileChooser.setAcceptAllFileFilterUsed(false);
+		fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Comma Separated Values (*.csv)", "csv"));
+		return fileChooser;
 	}
 }
