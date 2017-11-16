@@ -37,8 +37,8 @@ public final class RegisterManager {
 		return null;
 	}
 
-	private void addEntry(Entry entry, int index) {
-		register.addEntry(entry, index);
+	public Entry getEntry(int index) {
+		return register.getEntry(index);
 	}
 
 	public boolean undoLast() {
@@ -49,11 +49,35 @@ public final class RegisterManager {
 		}
 		return false;
 	}
-
+	
+	private void addEntry(Entry entry, int index) {
+		register.addEntry(entry, index);
+	}
+	
 	public boolean canUndo() {
 		return !history.isEmpty();
 	}
 
+	public int getRegisterSize() {
+		return register.getSize();
+	}
+	
+	public int getEntryPropertiesCount() {
+		return Entry.PROPERTIES_COUNT;
+	}
+	
+	public String getPropertyName(int index) {
+		return Entry.getPropertyName(index);
+	}
+	
+	public Object getValueAt(int rowIndex, int columnIndex) {
+		Entry entry = register.getEntry(rowIndex);
+		if (entry != null) {
+			return entry.getPropertyValue(columnIndex);
+		}
+		return null;
+	}
+	
 	public Collection<Entry> getEntries() {
 		return register.getEntries();
 	}

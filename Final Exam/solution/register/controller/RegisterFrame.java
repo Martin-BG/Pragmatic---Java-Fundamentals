@@ -1,6 +1,5 @@
 package register.controller;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -34,7 +33,7 @@ public class RegisterFrame extends JFrame {
 		setResizable(false);
 
 		this.registerController = registerController;
-		tableModel = new RegisterTableModel(this.registerController.getEntries());
+		tableModel = new RegisterTableModel(this.registerController);
 
 		createUI();
 	}
@@ -59,39 +58,38 @@ public class RegisterFrame extends JFrame {
 		deleteRowButton = new JButton("Delete");
 		deleteRowButton.setBounds(430, 405, 120, 40);
 		add(deleteRowButton);
-		deleteRowButton.setEnabled(false);
 
 		undoButton = new JButton("Undo");
 		undoButton.setBounds(560, 405, 120, 40);
 		add(undoButton);
-		undoButton.setEnabled(false);
 
 		try {
-			BufferedImage myPicture = ImageIO.read(new File(PET_ICON_FILE));
-			JLabel picLabel = new JLabel(new ImageIcon(myPicture));
+			JLabel picLabel = new JLabel(new ImageIcon(ImageIO.read(new File(PET_ICON_FILE))));
 			picLabel.setBounds(280, 390, 130, 75); 
 			add(picLabel);
-		} catch (IOException e) {
-			
-		}
+		} catch (IOException e) {}
 	
 		loadFileButton.addActionListener(e -> loadButtonAction());
 		saveFileButton.addActionListener(e -> saveButtonAction());
 		deleteRowButton.addActionListener(e -> deleteRowButtonAction());
 		undoButton.addActionListener(e -> undoButtonAction());
-
-		table.getSelectionModel().addListSelectionListener(e -> {
-			if (table.getSelectedRow() == -1) {
-				deleteRowButton.setEnabled(false);
-			} else {
-				deleteRowButton.setEnabled(true);
-			}
-		});
+		table.getSelectionModel().addListSelectionListener(e -> updateDeleteButton());
+		
+		updateTableAndButtonsState();
 	}
 
-	private void updateTableAndButtonsState() {
-		tableModel.setEntries(registerController.getEntries());
+	private void updateDeleteButton() {
+		deleteRowButton.setEnabled(table.getSelectedRow() != -1);
+	}
+	
+	private void updateUndoButton() {
 		undoButton.setEnabled(registerController.canUndo());
+	}
+	
+	private void updateTableAndButtonsState() {
+		tableModel.update();
+		updateUndoButton();
+		updateDeleteButton();
 	}
 
 	private void undoButtonAction() {
@@ -106,7 +104,6 @@ public class RegisterFrame extends JFrame {
 			Entry entry = registerController.deleteEntry(row);
 			if (entry != null) {
 				updateTableAndButtonsState();
-				deleteRowButton.setEnabled(false);
 			}
 		}
 	}

@@ -16,9 +16,9 @@ public class Register {
 		initEntries(entries);
 	}
 
-	public Entry deleteEntry(int selectedRow) {
-		if (selectedRow >= 0 && selectedRow < entries.size()) {
-			return entries.remove(selectedRow);
+	public Entry deleteEntry(int index) {
+		if (index >= 0 && index < entries.size()) {
+			return entries.remove(index);
 		}
 		return null;
 	}
@@ -29,12 +29,23 @@ public class Register {
 		}
 	}
 
+	public Entry getEntry(int index) {
+		if (index >= 0 && index < entries.size()) {
+			return entries.get(index);
+		}
+		return null;
+	}
+	
 	public void initEntries(Collection<Entry> entries) {
 		if (entries != null) {
 			this.entries = new LinkedList<>(entries);
 		} else {
 			this.entries = new LinkedList<>();
 		}
+	}
+	
+	public int getSize() {
+		return entries.size();
 	}
 	
 	public Collection<Entry> getEntries() {
