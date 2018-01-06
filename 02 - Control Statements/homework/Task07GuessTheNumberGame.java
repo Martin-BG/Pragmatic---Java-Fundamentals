@@ -24,7 +24,7 @@ public class Task07GuessTheNumberGame {
 			play = (scanner.next().charAt(0) == 'y');
 		}
 
-		System.out.println("Good bye!");
+		System.out.println("Goodbye!");
 
 		scanner.close();
 	}
